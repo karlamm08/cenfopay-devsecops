@@ -25,12 +25,17 @@ Se permiten las 3 alertas actuales mientras se trabaja en corregirlas. No se deb
 | registros   | ALTA      | 0      |      |                                                                          |
 
 ## 3. Disparadores
-| Evento | Qué corre | Por qué |
-|--------|-----------|---------|
-| pull_request a main | | |
-| push a main | | |
-| schedule semanal | | |
-| workflow_dispatch | | |
+¡Sí! Esa es la tabla de la sección 3. Disparadores de tu documento. Debes completar las dos columnas vacías: Qué corre y Por qué.
+
+Puedes colocar lo siguiente:
+
+| Evento                | Qué corre                         | Por qué                                                                   |
+| --------------------- | --------------------------------- | ------------------------------------------------------------------------- |
+| `pull_request a main` | Pipeline de seguridad y pruebas.  | Revisar los cambios antes de integrarlos a main.                          |
+| `push a main`         | Pipeline de seguridad y pruebas.  | Verificar que los cambios subidos a main no introduzcan vulnerabilidades. |
+| `schedule semanal`    | Análisis de seguridad programado. | Detectar posibles vulnerabilidades de forma periódica.                    |
+| `workflow_dispatch`   | Pipeline ejecutado manualmente.   | Permitir realizar análisis cuando sea necesario.                          |
+
 
 ## 4. Riesgos residuales (lo que queda abierto después de corregir)
 | # | Riesgo | Origen (hallazgo/huella) | Por qué no se corrige ahora | Control compensatorio | Dueño | Revisión |
