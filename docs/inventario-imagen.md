@@ -36,5 +36,4 @@
 | **Decisión y justificación** | No seleccionada. Es una imagen completa y contiene más componentes de los necesarios. | **Seleccionada.** Reduce el tamaño y los componentes innecesarios, conserva compatibilidad con las librerías actuales y utiliza Debian Bookworm. | No seleccionada. Aunque es más pequeña, puede presentar problemas de compatibilidad con dependencias existentes. |
 
 ## 5. Verificación post-endurecimiento
-Pega aquí la salida de `bash scripts/verificar-endurecimiento.sh cenfopay:local cenfopay-app-1`.
-encontradas: apt-get __sin_shell__
+apt-get __sin_shell__`bash scripts/verificar-endurecimiento.sh cenfopay:local cenfopay-app-1`.
