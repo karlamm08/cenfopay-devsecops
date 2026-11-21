@@ -6,8 +6,8 @@
 # no funcionan con versiones nuevas: riesgo residual (Python 3.9 sin soporte desde octubre
 # de 2025) que se elimina en la semana 3.
 # Fija las imágenes por su digest con:  bash scripts/fijar-digest.sh
-ARG IMAGEN_CONSTRUCCION=python:3.9-bookworm
-ARG IMAGEN_EJECUCION=python:3.9-slim-bookworm
+ARG IMAGEN_CONSTRUCCION=python:3.9-bookworm@sha256:ff12c273af1e1814efcd8dfdefe16a70a4d901afe94dce721ffed8a34176f285
+ARG IMAGEN_EJECUCION=python:3.9-slim-bookworm@sha256:a02e9c5406c416c504d6c9a1a306ff4080c3173f1008d192f953bd20382a2d5c
 
 FROM ${IMAGEN_CONSTRUCCION} AS construccion
 WORKDIR /build
