@@ -37,13 +37,14 @@
 | **Decisión y justificación** | Descartada: ~1,5 GB y cientos de paquetes que la app no usa, lo que da miles de fallas. | **Elegida:** reduce el tamaño ~8 veces y las fallas críticas de 235 a 9, mantiene el ecosistema Debian con el que la app ya funciona (probado en el Paso 5) y se fija por digest. | Descartada por ahora: es la más pequeña y con menos fallas, pero cambiar a musl arriesga las librerías heredadas. Se puede reevaluar en la semana 3, al actualizar Python y las dependencias. |
 
 ## 5. Verificación post-endurecimiento
+## 5. Verificación post-endurecimiento
 
 Se ejecutó `bash scripts/verificar-endurecimiento.sh cenfopay:local cenfopay-app-1` sobre el contenedor real. Salida:
 
 ```
 [i] Imagen: cenfopay:local
 ✅ END-01 La imagen define un usuario no root (USER)       USER=10001:10001
-❌ END-02 Sin secretos en variables ENV de la imagen       variables: GPG_KEY
+✅ END-02 Sin secretos en variables ENV de la imagen       ninguna variable sensible
 ✅ END-03 HEALTHCHECK definido                             presente
 ❌ END-04 Tamaño de la imagen <= 250 MB                    312 MB (superficie de ataque mayor)
 ❌ END-05 Sin herramientas innecesarias en runtime         encontradas: apt-get __sin_shell__
@@ -57,6 +58,14 @@ Se ejecutó `bash scripts/verificar-endurecimiento.sh cenfopay:local cenfopay-ap
 ✅ END-12 Límite de memoria definido                       256 MB
 [✓] Resultados en reportes/endurecimiento.json
 ```
+
+**Resultado:** 10 de 12 protecciones cumplidas.
+
+**Corrección hecha:** en la primera verificación END-02 falló por `GPG_KEY`, una variable heredada de la imagen oficial de Python (clave pública para verificar la descarga de Python, no un secreto). Como la app no la usa, se vació en el Dockerfile con `ENV GPG_KEY=""` y la compuerta de seguridad dejó de bloquear.
+
+**Las 2 que no pasan (aceptadas):**
+- **END-04:** la imagen pesa 312 MB (límite 250 MB) por las librerías y los parches, pero es mucho menor que los ~1,5 GB originales. Riesgo bajo.
+- **END-05:** `apt-get` viene incluido en la base slim. Riesgo bajo, porque el contenedor corre sin root y con el sistema de archivos de solo lectura.
 
 **Resultado:** 9 de 12 protecciones cumplidas.
 

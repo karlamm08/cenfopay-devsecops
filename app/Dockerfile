@@ -17,6 +17,8 @@ RUN python -m venv /opt/venv \
 
 FROM ${IMAGEN_EJECUCION}
 ENV PATH="/opt/venv/bin:${PATH}" PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+# GPG_KEY viene de la imagen base (solo sirve para construir Python); la app no la usa.
+ENV GPG_KEY=""
 # hadolint ignore=DL3005
 RUN apt-get update \
  && apt-get upgrade -y --no-install-recommends \
