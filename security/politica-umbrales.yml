@@ -57,11 +57,10 @@ herramientas:
   #     ALTA: 0
 
 # Excepciones (aceptación formal de un riesgo). Todas vencen: obligan a revisarlas.
-excepciones: []
-#  - herramienta: trivy-dependencias
-#    id: CVE-2026-00000
-#    tipo: riesgo_aceptado                # o falso_positivo
-#    ubicacion: "cenfopay:ci"            # opcional: limita la excepción a un objetivo
-#    justificacion: "La función vulnerable no se usa; control compensatorio X (ver informe)."
-#    responsable: "Nombre Apellido"
-#    vence: 2026-12-31
+excepciones:
+  - herramienta: trivy-config
+    id: DS-0031
+    tipo: falso_positivo
+    justificacion: "ENV GPG_KEY esta vacia (sin secreto). La regla solo mira el nombre de la variable. Se vacia a proposito porque la imagen base trae esa clave publica y la app no la usa."
+    responsable: "Karla"
+    vence: 2026-12-15
