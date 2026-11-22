@@ -28,24 +28,24 @@ herramientas:
       High: 0
       Medium: 3         # límite de tolerancia: alertas Medium de hoy
   # --- Se activan en las semanas siguientes con: bash scripts/semana.sh <número> ---
-  # hadolint:            # semana 2 · niveles: error, warning, info, style
-  #   umbrales:
-  #     error: 0
-  # trivy-config:        # semana 2 · configuración insegura del Dockerfile
-  #   umbrales:
-  #     CRITICAL: 0
-  #     HIGH: 0
-  # trivy-so:            # semana 2 · piezas del sistema operativo de la imagen
-  #   solo_con_correccion: true   # las fallas sin arreglo quedan como riesgo residual
-  #   umbrales:
-  #     CRITICAL: 0
-  #     HIGH: 0
-  # trivy-dependencias:  # semana 2 = solo reporta · semana 3 = detiene
-  #   solo_con_correccion: true
-  #   umbrales: {}
-  # endurecimiento:      # semana 2 · scripts/verificar-endurecimiento.sh
-  #   umbrales:
-  #     ALTA: 0
+  hadolint:            # semana 2 · niveles: error, warning, info, style
+    umbrales:
+      error: 0
+  trivy-config:        # semana 2 · configuración insegura del Dockerfile
+    umbrales:
+      CRITICAL: 0
+      HIGH: 0
+  trivy-so:            # semana 2 · piezas del sistema operativo de la imagen
+    solo_con_correccion: true   # las fallas sin arreglo quedan como riesgo residual
+    umbrales:
+      CRITICAL: 0
+      HIGH: 0
+  trivy-dependencias:  # semana 2 = solo reporta · semana 3 = detiene
+    solo_con_correccion: true
+    umbrales: {}
+  endurecimiento:      # semana 2 · scripts/verificar-endurecimiento.sh
+    umbrales:
+      ALTA: 0
   # bandit:              # semana 3 · HIGH, MEDIUM, LOW
   #   umbrales:
   #     HIGH: 0
@@ -57,11 +57,10 @@ herramientas:
   #     ALTA: 0
 
 # Excepciones (aceptación formal de un riesgo). Todas vencen: obligan a revisarlas.
-excepciones: []
-#  - herramienta: trivy-dependencias
-#    id: CVE-2026-00000
-#    tipo: riesgo_aceptado                # o falso_positivo
-#    ubicacion: "cenfopay:ci"            # opcional: limita la excepción a un objetivo
-#    justificacion: "La función vulnerable no se usa; control compensatorio X (ver informe)."
-#    responsable: "Nombre Apellido"
-#    vence: 2026-12-31
+excepciones:
+  - herramienta: trivy-config
+    id: DS-0031
+    tipo: falso_positivo
+    justificacion: "ENV GPG_KEY esta vacia (sin secreto). La regla solo mira el nombre de la variable. Se vacia a proposito porque la imagen base trae esa clave publica y la app no la usa."
+    responsable: "Karla"
+    vence: 2026-12-15

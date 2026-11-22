@@ -33,9 +33,10 @@ Se permiten las 3 alertas actuales mientras se trabaja en corregirlas. No se deb
 | workflow_dispatch | | |
 
 ## 4. Riesgos residuales (lo que queda abierto después de corregir)
+## 4. Riesgos residuales (lo que queda abierto después de corregir)
 | # | Riesgo | Origen (hallazgo/huella) | Por qué no se corrige ahora | Control compensatorio | Dueño | Revisión |
 |---|--------|--------------------------|-----------------------------|-----------------------|-------|----------|
-| 1 | | | | | | |
+| 1 | Python 3.9 ya no recibe parches (desde oct. 2025) | Imagen base `python:3.9` | Las librerías viejas no funcionan con Python más nuevo | Imagen slim, contenedor sin root y escaneo con Trivy | Karla | Semana 2 |
 
 ## 5. Excepciones aprobadas
 | Herramienta | ID | Justificación | Responsable | Vence |
