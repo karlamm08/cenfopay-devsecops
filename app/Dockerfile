@@ -20,7 +20,8 @@ LABEL org.opencontainers.image.title="CenfoPay" \
       org.opencontainers.image.description="Billetera ficticia del curso CIB-665 (Universidad Cenfotec)" \
       org.opencontainers.image.licenses="MIT"
 
-ENV PATH="/opt/venv/bin:${PATH}" \
+# GPG_KEY viene de la imagen base (solo sirve para construir Python); la app no la usa.
+ENV GPG_KEY=""ENV PATH="/opt/venv/bin:${PATH}" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
