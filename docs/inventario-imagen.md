@@ -8,11 +8,11 @@
 ## 2. Clasificación (antes / después del endurecimiento)
 | Origen | Severidad | Antes | Después | Con corrección | Sin corrección | En CISA KEV |
 |--------|-----------|------:|--------:|---------------:|---------------:|------------:|
-| SO (trivy-so) | CRITICAL | 235 | | | | |
-| SO (trivy-so) | HIGH | 2599 | | | | |
-| Dependencias (trivy-dependencias) | CRITICAL | 1 | | | | |
-| Dependencias (trivy-dependencias) | HIGH | 16 | | | | |
-| Configuración (trivy-config / hadolint) | ALTA | | | | | |
+| SO (trivy-so) | CRITICAL | 235 | 2 | 0 | 2 |  |
+| SO (trivy-so) | HIGH | 2599 | 99 | 0 | 99 | |
+| Dependencias (trivy-dependencias) | CRITICAL | 1 | 1 | 1 | 0 |  |
+| Dependencias (trivy-dependencias) | HIGH | 16 | 18 | 18 | 0 |  |
+| Configuración (trivy-config / hadolint) | ALTA | ? | 0 | 0 | 0 | 0 |
 
 ## 3. Top 5 para priorizar
 | CVE | Pieza | CVSS | EPSS | KEV | ¿Arreglo? | ¿Se usa? | Prioridad |
@@ -23,7 +23,6 @@
 | CVE-2024-34069 | Werkzeug 2.0.3 | 7.5 | 3.397 % | No | Sí (3.0.3) | Sí | Alta |
 | CVE-2026-24049 | wheel 0.45.1 | 7.1 | 0.35 % | No | Sí (0.46.2) | No (herramienta de construcción, no está en requirements.txt) | Quitar |
 
-## 4. Selección de la imagen base
 ## 4. Selección de la imagen base
 | Criterio | Opción A | Opción B | Opción C |
 |----------|----------|----------|----------|
@@ -37,10 +36,7 @@
 | **Decisión y justificación** | Descartada: ~1,5 GB y cientos de paquetes que la app no usa, lo que da miles de fallas. | **Elegida:** reduce el tamaño ~8 veces y las fallas críticas de 235 a 9, mantiene el ecosistema Debian con el que la app ya funciona (probado en el Paso 5) y se fija por digest. | Descartada por ahora: es la más pequeña y con menos fallas, pero cambiar a musl arriesga las librerías heredadas. Se puede reevaluar en la semana 3, al actualizar Python y las dependencias. |
 
 ## 5. Verificación post-endurecimiento
-## 5. Verificación post-endurecimiento
-
 Se ejecutó `bash scripts/verificar-endurecimiento.sh cenfopay:local cenfopay-app-1` sobre el contenedor real. Salida:
-
 ```
 [i] Imagen: cenfopay:local
 ✅ END-01 La imagen define un usuario no root (USER)       USER=10001:10001
@@ -58,17 +54,13 @@ Se ejecutó `bash scripts/verificar-endurecimiento.sh cenfopay:local cenfopay-ap
 ✅ END-12 Límite de memoria definido                       256 MB
 [✓] Resultados en reportes/endurecimiento.json
 ```
-
 **Resultado:** 10 de 12 protecciones cumplidas.
-
 **Corrección hecha:** en la primera verificación END-02 falló por `GPG_KEY`, una variable heredada de la imagen oficial de Python (clave pública para verificar la descarga de Python, no un secreto). Como la app no la usa, se vació en el Dockerfile con `ENV GPG_KEY=""` y la compuerta de seguridad dejó de bloquear.
-
 **Las 2 que no pasan (aceptadas):**
 - **END-04:** la imagen pesa 312 MB (límite 250 MB) por las librerías y los parches, pero es mucho menor que los ~1,5 GB originales. Riesgo bajo.
 - **END-05:** `apt-get` viene incluido en la base slim. Riesgo bajo, porque el contenedor corre sin root y con el sistema de archivos de solo lectura.
 
 **Resultado:** 9 de 12 protecciones cumplidas.
-
 **Las 3 que no pasan (aceptadas):**
 - **END-02:** `GPG_KEY` es la clave pública de la imagen oficial de Python, no un secreto. Falso positivo.
 - **END-04:** la imagen pesa 312 MB (límite 250 MB) por las librerías y los parches, pero es mucho menor que los ~1 GB originales. Riesgo bajo.
